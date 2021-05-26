@@ -16,11 +16,11 @@ $dbDoConnect = $dbConnect->connectToDatabase();
 if(!$dbDoConnect) exit(json_encode(false));
 
 //kontrola jestli existujou vybrané kategorie
-$data = $dbDoConnect->prepare("SELECT EXISTS(SELECT ID FROM categories WHERE category = :category AND ID = :ID)");
+$data = $dbDoConnect->prepare("SELECT ID FROM categories WHERE category = :category AND ID = :ID");
 foreach ($categories as $category){
     $data->bindValue(":category", $category["name"], PDO::PARAM_STR);
     $data->bindValue(":ID", $category["id"], PDO::PARAM_INT);
-    if(!$data->execute()){
+    if(!$data->execute() || $data->rowCount() == 0){
         exit(json_encode(false));
     }
 }
